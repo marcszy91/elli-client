@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/marcszy91/elli-client/compare/v1.0.2...v1.0.3) (2025-11-14)
+
+
+### Bug Fixes
+
+* check tag creation time for PyPI publish ([77e9e3b](https://github.com/marcszy91/elli-client/commit/77e9e3baf1eaec20404c42916b97bd232e73d299))
+
 ## [1.0.2](https://github.com/marcszy91/elli-client/compare/v1.0.1...v1.0.2) (2025-11-14)
 
 

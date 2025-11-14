@@ -3,6 +3,6 @@
 from .client import ElliAPIClient
 from .models import ChargingSession, FirmwareInfo, Station, TokenResponse
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 
 __all__ = ["ElliAPIClient", "ChargingSession", "Station", "TokenResponse", "FirmwareInfo"]
