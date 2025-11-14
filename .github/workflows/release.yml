@@ -13,7 +13,38 @@ jobs:
   # First run CI checks
   ci:
     name: CI Checks
-    uses: ./.github/workflows/ci.yml
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements-dev.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Black (formatting check)
+        run: black --check src/
+
+      - name: Run isort (import sorting check)
+        run: isort --check-only src/
+
+      - name: Run Flake8 (linting)
+        run: flake8 src/ --max-line-length=120 --extend-ignore=E203,W503
 
   # Only release if CI passes
   release:
