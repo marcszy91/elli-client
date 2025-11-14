@@ -160,25 +160,32 @@ jobs:
       - name: Check if new release was created
         id: check_release
         run: |
+          # Fetch all tags
+          git fetch --tags
+
           # Get the latest tag
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
-
-          # Get the commit that triggered this workflow
-          TRIGGER_COMMIT="${{ github.sha }}"
-
-          # Get all tags pointing to recent commits (last 5)
-          RECENT_TAGS=$(git tag --points-at HEAD~5..HEAD 2>/dev/null || echo "")
-
           echo "Latest tag: $LATEST_TAG"
-          echo "Recent tags: $RECENT_TAGS"
 
-          # Check if there's a v*.*.* tag in recent commits
-          if echo "$RECENT_TAGS" | grep -q "^v[0-9]"; then
-            echo "new_release=true" >> $GITHUB_OUTPUT
-            echo "New release detected!"
+          # Check if the latest tag starts with 'v' and was created in the last minute (by semantic-release)
+          if [ "$LATEST_TAG" != "none" ] && [[ "$LATEST_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            # Check if tag was created recently (within last 2 minutes)
+            TAG_DATE=$(git log -1 --format=%at "$LATEST_TAG")
+            NOW=$(date +%s)
+            DIFF=$((NOW - TAG_DATE))
+
+            echo "Tag age: $DIFF seconds"
+
+            if [ $DIFF -lt 120 ]; then
+              echo "new_release=true" >> $GITHUB_OUTPUT
+              echo "New release detected: $LATEST_TAG"
+            else
+              echo "new_release=false" >> $GITHUB_OUTPUT
+              echo "Tag too old, skipping PyPI publish"
+            fi
           else
             echo "new_release=false" >> $GITHUB_OUTPUT
-            echo "No new release, skipping PyPI publish"
+            echo "No valid release tag found"
           fi
 
       - name: Setup Python
