@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/marcszy91/elli-client/compare/v1.0.1...v1.0.2) (2025-11-14)
+
+
+### Bug Fixes
+
+* improve PyPI publish detection logic ([26ff0b1](https://github.com/marcszy91/elli-client/commit/26ff0b12055294a24508c62e37ff153cb27ca745))
+
 ## [1.0.1](https://github.com/marcszy91/elli-client/compare/v1.0.0...v1.0.1) (2025-11-14)
 
 
